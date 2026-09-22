@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: API de Arriendos - ArriendaPro
+  version: 1.0.0
+  description: API REST para la gestión de arriendos
+servers:
+  - url: http://localhost:8080/v1
+    description: Servidor local de desarrollo
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /clientes:
+    get:
+      summary: Listar clientes
+      responses:
+        '200':
+          description: Lista de clientes obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cliente'
+    post:
+      summary: Crear un nuevo cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClienteInput'
+      responses:
+        '201':
+          description: Cliente creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+
+  /arriendos:
+    get:
+      summary: Listar contratos de arriendo
+      responses:
+        '200':
+          description: Lista de arriendos
+    post:
+      summary: Registrar un arriendo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArriendoInput'
+      responses:
+        '201':
+          description: Arriendo registrado con éxito
+        '400':
+          description: Solicitud incorrecta o sin unidades disponibles
+        '503':
+          description: Servicio de equipos no disponible
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    ClienteInput:
+      type: object
+      required:
+        - nombre
+        - email
+      properties:
+        nombre:
+          type: string
+        email:
+          type: string
+        telefono:
+          type: string
+
+    Cliente:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        email:
+          type: string
+        telefono:
+          type: string
+
+    ArriendoInput:
+      type: object
+      required:
+        - cliente_id
+        - equipo_id
+        - cantidad
+        - fecha_inicio
+        - fecha_fin
+      properties:
+        cliente_id:
+          type: string
+          format: uuid
+        equipo_id:
+          type: string
+        cantidad:
+          type: integer
+          minimum: 1
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
