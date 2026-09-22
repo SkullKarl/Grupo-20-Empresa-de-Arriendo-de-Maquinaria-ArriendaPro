@@ -1,0 +1,51 @@
+syntax = "proto3";
+package equipo;
+option go_package = "";
+option java_multiple_files = true;
+option java_package = "";
+
+service EquipoService {
+  rpc GetEquipo (GetEquipoRequest) returns (GetEquipoResponse);
+  rpc ListCatalog (ListCatalogRequest) returns (ListCatalogResponse);
+  rpc SetReserva (SetReservaRequest) returns (SetReservaResponse);
+}
+
+message Equipo {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  int32 total_units = 4;
+  int32 available_units = 5;
+}
+
+message GetEquipoRequest {
+  string id = 1;
+}
+
+message GetEquipoResponse {
+  Equipo equipo = 1;
+}
+
+message ListCatalogRequest {
+}
+
+message ListCatalogResponse {
+  repeated Equipo equipos = 1;
+}
+
+enum OperationReserva {
+  RESERVE = 0;
+  RELEASE = 1;
+}
+
+message SetReservaRequest {
+  string equipo_id = 1;
+  int32 quantity = 2;
+  OperationReserva operation = 3;
+}
+
+message SetReservaResponse {
+  bool success = 1;
+  string message = 2;
+  int32 current_available_units = 3;
+}
