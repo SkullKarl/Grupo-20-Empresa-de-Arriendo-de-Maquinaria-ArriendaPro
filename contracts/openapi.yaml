@@ -39,12 +39,50 @@ paths:
               schema:
                 $ref: '#/components/schemas/Cliente'
 
+  /clientes/{id}:
+    get:
+      summary: Consultar un cliente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único del cliente
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cliente'
+        '400':
+          description: ID del cliente inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Cliente no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
   /arriendos:
     get:
       summary: Listar contratos de arriendo
       responses:
         '200':
-          description: Lista de arriendos
+          description: Lista de arriendos obtenida con éxito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Arriendo'
     post:
       summary: Registrar un arriendo
       requestBody:
@@ -56,10 +94,92 @@ paths:
       responses:
         '201':
           description: Arriendo registrado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Arriendo'
         '400':
           description: Solicitud incorrecta o sin unidades disponibles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '503':
           description: Servicio de equipos no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /arriendos/{id}:
+    get:
+      summary: Consultar un arriendo por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único del arriendo
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Arriendo encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Arriendo'
+        '400':
+          description: ID del arriendo inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Arriendo no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /arriendos/{id}/devolucion:
+    post:
+      summary: Devolver un arriendo
+      description: Revierte la operación de registrar arriendo
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único del arriendo
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Arriendo devuelto correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Arriendo'
+        '400':
+          description: El arriendo no pudo ser devuelto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Arriendo no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Servicio de equipos no disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -69,6 +189,18 @@ components:
       name: X-API-Key
 
   schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Código o tipo del error
+        message:
+          type: string
+          description: Descripción del error          
     ClienteInput:
       type: object
       required:
@@ -79,6 +211,7 @@ components:
           type: string
         email:
           type: string
+          format: email
         telefono:
           type: string
 
@@ -92,6 +225,7 @@ components:
           type: string
         email:
           type: string
+          format: email
         telefono:
           type: string
 
@@ -118,3 +252,28 @@ components:
         fecha_fin:
           type: string
           format: date
+
+    Arriendo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cliente_id:
+          type: string
+          format: uuid
+        equipo_id:
+          type: string
+        cantidad:
+          type: integer
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        estado:
+          type: string
+          enum:
+            - activo
+            - devuelto
