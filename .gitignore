@@ -1,0 +1,27 @@
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Entornos virtuales de Python
+EncargoUnidad1/
+.venv/
+venv/
+
+# Archivos generados por Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Archivos locales del editor
+.vscode/
+.idea/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.log

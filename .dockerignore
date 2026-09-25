@@ -1,0 +1,23 @@
+# Git y configuración local
+.git/
+.env
+.env.*
+
+# Entornos virtuales
+EncargoUnidad1/
+.venv/
+venv/
+
+# Archivos temporales de Python
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+
+# Editores y sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Documentación y archivos locales innecesarios para la imagen
+*.log
