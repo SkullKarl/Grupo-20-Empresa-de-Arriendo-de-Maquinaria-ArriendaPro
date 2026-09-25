@@ -1,5 +1,37 @@
 services:
 
+# =====================
+#       EQUIPOS
+# =====================
+
+  #Base de datos del sistema de equipos
+  mongo-equipos:
+    image: mongo:7
+    container_name: mongo-equipos
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_equipos_data:/data/db
+    networks:
+      - red-equipos
+
+  #Microservicio gRPC de equipos
+  equipos-service:
+    build: ./equipos-service
+    container_name: equipos-service
+    ports:
+      - "50051:50051"
+    environment:
+      - MONGO_URI=mongodb://mongo-equipos:27017
+    depends_on:
+      - mongo-equipos
+    networks:
+      - red-equipos
+
+# =====================
+#       ARRIENDOS
+# =====================
+
   mongo_arriendos:
     image: mongo:7
     restart: unless-stopped
@@ -15,7 +47,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-
   arriendos:
     build:
       context: .
@@ -26,10 +57,21 @@ services:
       MONGO_URI: mongodb://mongo_arriendos:27017
       MONGO_DB: arriendos_db
       ARRIENDOS_API_KEY: ${ARRIENDOS_API_KEY:?Configura ARRIENDOS_API_KEY}
-      EQUIPOS_GRPC_ADDRESS: equipos:50051 # Debe coincidir
+      EQUIPOS_GRPC_ADDRESS: equipos-service:50051 # Debe coincidir
     depends_on:
       mongo_arriendos:
         condition: service_healthy
+      equipos-service:
+        condition: service_started
+
+    networks:
+      - red-equipos
+
 
 volumes:
+  mongo_equipos_data:
   mongo_arriendos_data:
+
+networks:
+  red-equipos:
+    driver: bridge
