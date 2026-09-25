@@ -1,0 +1,31 @@
+services:
+  #Base de datos del sistema de equipos
+  mongo-equipos:
+    image: mongo:latest
+    container_name: mongo-equipos
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_equipos_data:/data/db
+    networks:
+      - red-equipos
+
+  #Microservicio gRPC de equipos
+  equipos-service:
+    build: ./equipos-service
+    container_name: equipos-service
+    ports:
+      - "50051:50051"
+    environment:
+      - MONGO_URI=mongodb://mongo-equipos:27017
+    depends_on:
+      - mongo-equipos
+    networks:
+      - red-equipos
+
+volumes:
+  mongo_equipos_data:
+
+networks:
+  red-equipos:
+    driver: bridge
