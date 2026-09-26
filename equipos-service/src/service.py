@@ -38,8 +38,8 @@ class EquipoService(equipo_pb2_grpc.EquipoServiceServicer):
             ))
         return equipo_pb2.ListCatalogResponse(equipos=equipos_list)
     
-    def ModifyReservation(self, request, context):
-        eq = equipos_collection.find_one({"id": request.equipment_id})
+    def SetReserva(self, request, context):
+        eq = equipos_collection.find_one({"id": request.equipo_id})
         if not eq:
             context.abort(grpc.StatusCode.NOT_FOUND, "Equipo no encontrado")
 
@@ -47,16 +47,16 @@ class EquipoService(equipo_pb2_grpc.EquipoServiceServicer):
             if eq["available_units"] >= request.quantity:
                 new_units = eq["available_units"] - request.quantity
                 equipos_collection.update_one(
-                    {"id": request.equipment_id},
+                    {"id": request.equipo_id},
                     {"$set": {"available_units": new_units}}
                 )
-                return equipo_pb2.ModifyReservationResponse(
+                return equipo_pb2.SetReservaResponse(
                     success=True,
                     message="Reserva realizada con éxito",
                     current_available_units=new_units
                 )
             else:
-                return equipo_pb2.ModifyReservationResponse(
+                return equipo_pb2.SetReservaResponse(
                     success=False,
                     message="Stock insuficiente",
                     current_available_units=eq["available_units"]
@@ -68,16 +68,16 @@ class EquipoService(equipo_pb2_grpc.EquipoServiceServicer):
                 new_units = eq["total_units"]
                 
             equipos_collection.update_one(
-                {"id": request.equipment_id},
+                {"id": request.equipo_id},
                 {"$set": {"available_units": new_units}}
             )
-            return equipo_pb2.ModifyReservationResponse(
+            return equipo_pb2.SetReservaResponse(
                 success=True,
                 message="Equipo liberado correctamente",
                 current_available_units=new_units
             )
 
-        return equipo_pb2.ModifyReservationResponse(
+        return equipo_pb2.SetReservaResponse(
             success=False,
             message="Operación desconocida",
             current_available_units=eq["available_units"]

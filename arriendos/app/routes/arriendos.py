@@ -102,7 +102,7 @@ def registrar_arriendo(arriendo: ArriendoInput):
 
     # Guardar en base de datos
     try:
-        arriendos_collection.instert_one(documento)
+        arriendos_collection.insert_one(documento)
     except PyMongoError:
         try:
             liberar_equipo(arriendo.equipo_id, arriendo.cantidad)

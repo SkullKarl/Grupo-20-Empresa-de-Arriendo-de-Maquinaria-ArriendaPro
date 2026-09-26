@@ -7,7 +7,7 @@ COPY arriendos/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY arriendos/app/ ./app/
-COPY contracts/equipo.proto ./proto/equipo.proto
+COPY equipos-service/equipo.proto ./proto/equipo.proto
 
 RUN mkdir -p app/generated && \
     touch app/generated/__init__.py && \

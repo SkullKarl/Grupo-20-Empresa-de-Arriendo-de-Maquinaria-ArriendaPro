@@ -47,6 +47,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - red-equipos
+
   arriendos:
     build:
       context: .
@@ -57,7 +60,7 @@ services:
       MONGO_URI: mongodb://mongo_arriendos:27017
       MONGO_DB: arriendos_db
       ARRIENDOS_API_KEY: ${ARRIENDOS_API_KEY:?Configura ARRIENDOS_API_KEY}
-      EQUIPOS_GRPC_ADDRESS: equipos-service:50051 # Debe coincidir
+      EQUIPOS_GRPC_ADDRESS: equipos-service:50051
     depends_on:
       mongo_arriendos:
         condition: service_healthy
