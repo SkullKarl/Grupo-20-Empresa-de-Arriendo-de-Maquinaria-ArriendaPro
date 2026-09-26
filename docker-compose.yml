@@ -37,6 +37,8 @@ services:
     restart: unless-stopped
     volumes:
       - mongo_arriendos_data:/data/db
+    networks:
+      - red-equipos
     healthcheck:
       test:
         - CMD
