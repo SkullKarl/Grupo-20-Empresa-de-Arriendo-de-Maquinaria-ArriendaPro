@@ -81,8 +81,6 @@ Para ejecutar el proyecto se necesita:
 - Docker
 - Docker Compose
 
-No es necesario instalar Python, MongoDB ni las dependencias de los servicios localmente.
-
 ---
 
 ## Configuración
@@ -285,7 +283,7 @@ docker compose up --build
 
 ---
 
-## Architecture Decision Records
+## ADR
 
 Las principales decisiones arquitectónicas del proyecto están documentadas en:
 
@@ -310,8 +308,6 @@ Su uso estuvo orientado principalmente a:
 
 - Consultas sobre conceptos de REST, gRPC, Protocol Buffers y Docker.
 - Apoyo en la revisión y depuración de errores de integración.
-- Revisión de configuración de Docker Compose.
-- Apoyo en documentación y organización del proyecto.
 
 Las propuestas generadas mediante estas herramientas fueron revisadas, adaptadas y verificadas por los integrantes antes de incorporarlas al proyecto. Los integrantes son responsables del código y de las decisiones arquitectónicas utilizadas en la solución.
 
